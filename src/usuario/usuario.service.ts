@@ -41,13 +41,12 @@ export class UsuarioService {
     });
   }
 
-  async findOrCreateDefaultUser(): Promise<Usuario> {
-    const email = 'admin@deploycheck.com';
-    let user = await this.findByEmail(email);
+  async findOrCreate(data: { nombre: string; email: string }): Promise<Usuario> {
+    let user = await this.findByEmail(data.email);
     if (!user) {
       user = await this.create({
-        nombre: 'Administrador',
-        email,
+        nombre: data.nombre,
+        email: data.email,
       });
     }
     return user;

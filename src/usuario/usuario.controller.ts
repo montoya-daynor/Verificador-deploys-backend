@@ -14,7 +14,14 @@ export class UsuarioController {
   async create(
     @Body() data: { nombre: string; email: string },
   ): Promise<Usuario> {
-    return this.usuarioService.create(data);
+    return this.usuarioService.findOrCreate(data);
+  }
+
+  @Post('sync')
+  async syncUser(
+    @Body() data: { nombre: string; email: string },
+  ): Promise<Usuario> {
+    return this.usuarioService.findOrCreate(data);
   }
 
   @Get(':id')

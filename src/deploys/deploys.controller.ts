@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Sse } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, Sse } from '@nestjs/common';
 import { DeploysService, Deploy } from './deploys.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -15,15 +15,15 @@ export class DeploysController {
   constructor(private readonly deploysService: DeploysService) {}
 
   @Get()
-  async findAll(): Promise<Deploy[]> {
-    return this.deploysService.findAll();
+  async findAll(@Query('usuarioId') usuarioId?: string): Promise<Deploy[]> {
+    return this.deploysService.findAll(usuarioId);
   }
 
   @Post()
   async create(
-    @Body() createDeployDto: Omit<Deploy, 'id' | 'startedAt' | 'status'>,
+    @Body() createDeployDto: Omit<Deploy, 'id' | 'startedAt' | 'status'> & { usuarioId?: string },
   ): Promise<Deploy> {
-    return this.deploysService.create(createDeployDto);
+    return this.deploysService.create(createDeployDto, createDeployDto.usuarioId);
   }
 
   // Endpoint SSE expuesto en: GET /deploys/sse
